@@ -178,19 +178,19 @@ public partial class MainPage : ContentPage
 
         StepTitleLabel.Text = step switch
         {
-            StepSection.Download => "Step 1 · Download",
-            StepSection.Frames => "Step 2 · Frames",
+            StepSection.Download => "Step 1 · 下载",
+            StepSection.Frames => "Step 2 · 抽帧",
             StepSection.Ocr => "Step 3 · OCR",
-            StepSection.More => "Step 4 · More / Settings",
+            StepSection.More => "Step 4 · 设置",
             _ => StepTitleLabel.Text
         };
 
         StepSubtitleLabel.Text = step switch
         {
-            StepSection.Download => "导入链接，像素猫陪你跑完整个流程",
-            StepSection.Frames => "抽帧与 ROI 参数可视化，沿用原逻辑",
-            StepSection.Ocr => "OCR 识别输出，界面更可爱",
-            StepSection.More => "预留设置与结果展示",
+            StepSection.Download => "“知识在流动的路径上重生。”",
+            StepSection.Frames => "“观察是理解的起点。”",
+            StepSection.Ocr => "“文字等待被诠释。”",
+            StepSection.More => "“自省方能修正航向。”",
             _ => StepSubtitleLabel.Text
         };
     }
@@ -575,7 +575,7 @@ public partial class MainPage : ContentPage
         var videoPath = GetSelectedVideoPath();
         if (string.IsNullOrWhiteSpace(videoPath) || !File.Exists(videoPath))
         {
-            Log("请选择有效视频再抓取预览帧");
+            Log("Please select a valid video before preview.");
             return;
         }
 
@@ -593,12 +593,12 @@ public partial class MainPage : ContentPage
             }
             else
             {
-                Log($"预览失败: {preview.Error ?? "未知错误"}");
+                Log($"Preview failed: {preview.Error ?? "unknown error"}");
             }
         }
         catch (Exception ex)
         {
-            Log($"预览异常: {ex.Message}", ex);
+            Log($"Preview exception: {ex.Message}", ex);
         }
     }
 
@@ -607,12 +607,12 @@ public partial class MainPage : ContentPage
         try
         {
             var rect = BuildCropRectFromEntries();
-            // ROI 叠加已禁用，保留参数供后端裁剪使用
-            if (rect != null) Log("ROI 参数已记录（无叠加显示）");
+            // ROI overlay is disabled; keep parameters for backend cropping only
+            if (rect != null) Log("ROI parameters recorded (no overlay)");
         }
         catch (Exception ex)
         {
-            Log($"应用 ROI 失败: {ex.Message}", ex);
+            Log($"Apply ROI failed: {ex.Message}", ex);
         }
     }
 
@@ -632,13 +632,13 @@ public partial class MainPage : ContentPage
             var videoPath = GetSelectedVideoPath();
             if (string.IsNullOrWhiteSpace(videoPath) || !File.Exists(videoPath))
             {
-                Log("请先选择有效的视频路径或先执行下载");
+                Log("Select a valid video path or download first.");
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(_frameOutputPath))
             {
-                Log("请先选择帧输出目录");
+                Log("Please choose a frame output directory.");
                 return;
             }
 
@@ -648,13 +648,13 @@ public partial class MainPage : ContentPage
             }
             catch (Exception ex)
             {
-                Log($"无法创建帧输出目录：{_frameOutputPath}", ex);
+                Log($"Cannot create frame output directory: {_frameOutputPath}", ex);
                 return;
             }
 
             var config = BuildFrameConfigFromInputs();
 
-            SetFrameProgress(0, "准备抽帧");
+            SetFrameProgress(0, "Preparing frame extraction");
 
             var progress = new Progress<FrameExtractProgress>(p =>
             {
@@ -674,19 +674,19 @@ public partial class MainPage : ContentPage
                 FrameDirEntry.Text = result.OutputDirectory;
                 if (result.Frames.Count == 0)
                 {
-                    SetFrameProgress(0, "抽帧失败或无输出");
-                    Log("抽帧失败，未生成任何帧");
+                    SetFrameProgress(0, "Frame extraction failed or no output");
+                    Log("Frame extraction failed, no frames produced");
                 }
                 else
                 {
-                    SetFrameProgress(1, $"完成，帧数 {result.Frames.Count}");
-                    Log($"抽帧完成，输出目录 {result.OutputDirectory}，帧数 {result.Frames.Count}");
+                    SetFrameProgress(1, $"Done, frames {result.Frames.Count}");
+                    Log($"Extraction complete, output {result.OutputDirectory}, frames {result.Frames.Count}");
                 }
             });
         }
         catch (Exception ex)
         {
-            Log($"抽帧异常: {ex.Message}", ex);
+            Log($"Frame extraction exception: {ex.Message}", ex);
         }
     }
 
@@ -700,6 +700,9 @@ public partial class MainPage : ContentPage
     }
 
     #endregion
+    #region OCR
+
+#endregion
     #region OCR
 
     private async void OnBrowseFrameDirClicked(object sender, EventArgs e)
@@ -907,3 +910,6 @@ public partial class MainPage : ContentPage
 
     #endregion
 }
+
+
+
