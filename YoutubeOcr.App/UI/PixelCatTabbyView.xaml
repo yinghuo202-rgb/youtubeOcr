@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView x:Class="YoutubeOcr.App.UI.PixelCatTabbyView"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             WidthRequest="88"
+             HeightRequest="88"
+             InputTransparent="True">
+    <Grid RowDefinitions="*,*,*,*,*,*,*,*"
+          ColumnDefinitions="*,*,*,*,*,*,*,*"
+          RowSpacing="0"
+          ColumnSpacing="0">
+        <BoxView Grid.Row="0" Grid.Column="2" Color="{StaticResource HighlightOrange}" />
+        <BoxView Grid.Row="0" Grid.Column="5" Color="{StaticResource HighlightOrange}" />
+        <BoxView Grid.Row="1" Grid.Column="2" Color="{StaticResource HighlightOrange}" />
+        <BoxView Grid.Row="1" Grid.Column="5" Color="{StaticResource HighlightOrange}" />
+
+        <BoxView Grid.Row="2" Grid.Column="1" Color="{StaticResource PrimaryButton}" />
+        <BoxView Grid.Row="2" Grid.Column="2" Color="{StaticResource HighlightOrange}" />
+        <BoxView Grid.Row="2" Grid.Column="3" Color="{StaticResource PrimaryButton}" />
+        <BoxView Grid.Row="2" Grid.Column="4" Color="{StaticResource PrimaryButton}" />
+        <BoxView Grid.Row="2" Grid.Column="5" Color="{StaticResource HighlightOrange}" />
+        <BoxView Grid.Row="2" Grid.Column="6" Color="{StaticResource PrimaryButton}" />
+
+        <BoxView Grid.Row="3" Grid.Column="1" Color="{StaticResource HighlightOrange}" />
+        <BoxView Grid.Row="3" Grid.Column="2" Color="{StaticResource PrimaryButton}" />
+        <BoxView Grid.Row="3" Grid.Column="3" Color="{StaticResource CardBackground}" />
+        <BoxView Grid.Row="3" Grid.Column="4" Color="{StaticResource CardBackground}" />
+        <BoxView Grid.Row="3" Grid.Column="5" Color="{StaticResource PrimaryButton}" />
+        <BoxView Grid.Row="3" Grid.Column="6" Color="{StaticResource HighlightOrange}" />
+
+        <BoxView Grid.Row="4" Grid.Column="1" Color="{StaticResource HighlightOrange}" />
+        <BoxView Grid.Row="4" Grid.Column="2" Color="{StaticResource CardBackground}" />
+        <BoxView Grid.Row="4" Grid.Column="3" Color="{StaticResource HighlightOrange}" />
+        <BoxView Grid.Row="4" Grid.Column="4" Color="{StaticResource HighlightOrange}" />
+        <BoxView Grid.Row="4" Grid.Column="5" Color="{StaticResource CardBackground}" />
+        <BoxView Grid.Row="4" Grid.Column="6" Color="{StaticResource HighlightOrange}" />
+
+        <BoxView Grid.Row="5" Grid.Column="2" Color="{StaticResource PrimaryButton}" />
+        <BoxView Grid.Row="5" Grid.Column="3" Color="{StaticResource HighlightOrange}" />
+        <BoxView Grid.Row="5" Grid.Column="4" Color="{StaticResource PrimaryButton}" />
+        <BoxView Grid.Row="5" Grid.Column="5" Color="{StaticResource HighlightOrange}" />
+
+        <BoxView Grid.Row="6" Grid.Column="2" Color="{StaticResource PrimaryBlue}" />
+        <BoxView Grid.Row="6" Grid.Column="3" Color="{StaticResource PrimaryButton}" />
+        <BoxView Grid.Row="6" Grid.Column="4" Color="{StaticResource PrimaryButton}" />
+        <BoxView Grid.Row="6" Grid.Column="5" Color="{StaticResource PrimaryBlue}" />
+
+        <BoxView Grid.Row="7" Grid.Column="3" Color="{StaticResource PrimaryBlue}" />
+        <BoxView Grid.Row="7" Grid.Column="4" Color="{StaticResource PrimaryBlue}" />
+    </Grid>
+</ContentView>

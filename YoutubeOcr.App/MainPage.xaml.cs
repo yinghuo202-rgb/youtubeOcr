@@ -79,13 +79,10 @@ public partial class MainPage : ContentPage
 
     public ObservableCollection<string> LogMessages => _logMessages;
 
-    public MainPage(
-        IYouTubeDownloader downloader,
-        IFrameExtractor extractor,
-        IOcrEngine ocr)
+    public MainPage(IYouTubeDownloader downloader, IFrameExtractor extractor, IOcrEngine ocr)
     {
-        BindingContext = this;
         InitializeComponent();
+        BindingContext = this;
 
         _downloader = downloader;
         _extractor = extractor;
@@ -103,7 +100,7 @@ public partial class MainPage : ContentPage
         FrameOutputEntry.Text = _frameOutputPath;
 
         OcrLanguagePicker.SelectedIndex = 0;
-        OcrConfidenceValueLabel.Text = OcrConfidenceSlider.Value.ToString("0.00");
+        OcrConfidenceValueLabel.Text = "0.50";
 
         AppVersionLabel.Text = typeof(App).Assembly.GetName().Version?.ToString() ?? "1.0";
         ConfigPathLabel.Text = Path.Combine(FileSystem.AppDataDirectory, PipelineConfig.DefaultConfigFileName);
@@ -135,7 +132,7 @@ public partial class MainPage : ContentPage
             }
             catch
             {
-                // keep logging silent
+                // ignore logging failures
             }
         });
     }
@@ -239,14 +236,7 @@ public partial class MainPage : ContentPage
 
     private void OnClearUrlClicked(object sender, EventArgs e)
     {
-        try
-        {
-            UrlEntry.Text = string.Empty;
-        }
-        catch (Exception ex)
-        {
-            Log($"清空输入失败: {ex.Message}", ex);
-        }
+        UrlEntry.Text = string.Empty;
     }
 
     private void OnImportUrlsClicked(object sender, EventArgs e)
@@ -268,70 +258,32 @@ public partial class MainPage : ContentPage
 
     private void OnRemoveUrlClicked(object sender, EventArgs e)
     {
-        try
-        {
-            if (sender is not Button btn || btn.CommandParameter is not DownloadItem item) return;
-            _downloadItems.Remove(item);
-        }
-        catch (Exception ex)
-        {
-            Log($"移除链接失败: {ex.Message}", ex);
-        }
+        if (sender is not Button btn || btn.CommandParameter is not DownloadItem item) return;
+        _downloadItems.Remove(item);
     }
 
-    private void OnClearQueueClicked(object sender, EventArgs e)
-    {
-        try
-        {
-            _downloadItems.Clear();
-        }
-        catch (Exception ex)
-        {
-            Log($"清空队列失败: {ex.Message}", ex);
-        }
-    }
+    private void OnClearQueueClicked(object sender, EventArgs e) => _downloadItems.Clear();
 
     private void OnFillSampleClicked(object sender, EventArgs e)
     {
-        try
-        {
-            UrlEntry.Text = "https://www.youtube.com/watch?v=ba7rRfKIHxU";
-            AddUrlToQueue(UrlEntry.Text);
-        }
-        catch (Exception ex)
-        {
-            Log($"填充示例失败: {ex.Message}", ex);
-        }
+        UrlEntry.Text = "https://www.youtube.com/watch?v=ba7rRfKIHxU";
+        AddUrlToQueue(UrlEntry.Text);
     }
 
     private async void OnBrowseDownloadFolderClicked(object sender, EventArgs e)
     {
-        try
+        var folder = await FolderPickerService.PickFolderAsync("选择下载目录");
+        if (!string.IsNullOrWhiteSpace(folder))
         {
-            var folder = await FolderPickerService.PickFolderAsync("选择下载目录");
-            if (!string.IsNullOrWhiteSpace(folder))
-            {
-                _downloadOutputPath = folder;
-                DownloadOutputEntry.Text = folder;
-            }
-        }
-        catch (Exception ex)
-        {
-            Log($"选择下载目录失败: {ex.Message}", ex);
+            _downloadOutputPath = folder;
+            DownloadOutputEntry.Text = folder;
         }
     }
 
     private void OnClearSelectionClicked(object sender, EventArgs e)
     {
-        try
-        {
-            UrlEntry.Text = string.Empty;
-            BatchUrlsEditor.Text = string.Empty;
-        }
-        catch (Exception ex)
-        {
-            Log($"清理输入失败: {ex.Message}", ex);
-        }
+        UrlEntry.Text = string.Empty;
+        BatchUrlsEditor.Text = string.Empty;
     }
 
     private void SetDownloadProgress(double progress, string message)
@@ -342,6 +294,7 @@ public partial class MainPage : ContentPage
             DownloadProgressLabel.Text = message;
         });
     }
+
     private async void OnDownloadClicked(object sender, EventArgs e)
     {
         try
@@ -472,6 +425,7 @@ public partial class MainPage : ContentPage
     }
 
     #endregion
+
     #region Frames
 
     private void OnSyncDownloadsClicked(object sender, EventArgs e)
@@ -525,18 +479,11 @@ public partial class MainPage : ContentPage
 
     private async void OnBrowseFramesFolderClicked(object sender, EventArgs e)
     {
-        try
+        var folder = await FolderPickerService.PickFolderAsync("选择帧输出目录");
+        if (!string.IsNullOrWhiteSpace(folder))
         {
-            var folder = await FolderPickerService.PickFolderAsync("选择帧输出目录");
-            if (!string.IsNullOrWhiteSpace(folder))
-            {
-                _frameOutputPath = folder;
-                FrameOutputEntry.Text = folder;
-            }
-        }
-        catch (Exception ex)
-        {
-            Log($"选择帧输出目录失败: {ex.Message}", ex);
+            _frameOutputPath = folder;
+            FrameOutputEntry.Text = folder;
         }
     }
 
@@ -575,7 +522,7 @@ public partial class MainPage : ContentPage
         var videoPath = GetSelectedVideoPath();
         if (string.IsNullOrWhiteSpace(videoPath) || !File.Exists(videoPath))
         {
-            Log("Please select a valid video before preview.");
+            Log("请选择有效视频再抓取预览帧");
             return;
         }
 
@@ -593,12 +540,12 @@ public partial class MainPage : ContentPage
             }
             else
             {
-                Log($"Preview failed: {preview.Error ?? "unknown error"}");
+                Log($"预览失败: {preview.Error ?? "未知错误"}");
             }
         }
         catch (Exception ex)
         {
-            Log($"Preview exception: {ex.Message}", ex);
+            Log($"预览异常: {ex.Message}", ex);
         }
     }
 
@@ -607,12 +554,55 @@ public partial class MainPage : ContentPage
         try
         {
             var rect = BuildCropRectFromEntries();
-            // ROI overlay is disabled; keep parameters for backend cropping only
-            if (rect != null) Log("ROI parameters recorded (no overlay)");
+            if (rect == null)
+            {
+                Log("ROI 参数无效");
+                return;
+            }
+
+            if (PreviewImage.Source == null)
+            {
+                Log("请先生成预览帧再应用 ROI");
+                return;
+            }
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                try
+                {
+                    var displayWidth = PreviewImage.Width > 0 ? PreviewImage.Width : PreviewImage.WidthRequest;
+                    var displayHeight = PreviewImage.Height > 0 ? PreviewImage.Height : PreviewImage.HeightRequest;
+                    if (displayWidth <= 0 || displayHeight <= 0)
+                    {
+                        Log("预览区域尚未准备好");
+                        return;
+                    }
+
+                    // 粗略缩放：假定输入为原始像素，使用同一系数近似到显示尺寸
+                    var scaleX = displayWidth / Math.Max(rect.Width, 1);
+                    var scaleY = displayHeight / Math.Max(rect.Height, 1);
+                    var scale = Math.Min(scaleX, scaleY);
+                    scale = double.IsFinite(scale) && scale > 0 ? scale : 1;
+
+                    var width = Math.Max(1, Math.Min(displayWidth, rect.Width * scale));
+                    var height = Math.Max(1, Math.Min(displayHeight, rect.Height * scale));
+                    var x = Math.Clamp(rect.X * scale, 0, Math.Max(0, displayWidth - width));
+                    var y = Math.Clamp(rect.Y * scale, 0, Math.Max(0, displayHeight - height));
+
+                    RoiOverlay.IsVisible = true;
+                    RoiOverlay.WidthRequest = width;
+                    RoiOverlay.HeightRequest = height;
+                    RoiOverlay.Margin = new Thickness(x, y, 0, 0);
+                }
+                catch (Exception ex2)
+                {
+                    Log($"ROI 可视化失败: {ex2.Message}", ex2);
+                }
+            });
         }
         catch (Exception ex)
         {
-            Log($"Apply ROI failed: {ex.Message}", ex);
+            Log($"应用 ROI 失败: {ex.Message}", ex);
         }
     }
 
@@ -632,13 +622,13 @@ public partial class MainPage : ContentPage
             var videoPath = GetSelectedVideoPath();
             if (string.IsNullOrWhiteSpace(videoPath) || !File.Exists(videoPath))
             {
-                Log("Select a valid video path or download first.");
+                Log("请先选择有效的视频路径或先执行下载");
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(_frameOutputPath))
             {
-                Log("Please choose a frame output directory.");
+                Log("请先选择帧输出目录");
                 return;
             }
 
@@ -648,13 +638,13 @@ public partial class MainPage : ContentPage
             }
             catch (Exception ex)
             {
-                Log($"Cannot create frame output directory: {_frameOutputPath}", ex);
+                Log($"无法创建帧输出目录：{_frameOutputPath}", ex);
                 return;
             }
 
             var config = BuildFrameConfigFromInputs();
 
-            SetFrameProgress(0, "Preparing frame extraction");
+            SetFrameProgress(0, "准备抽帧");
 
             var progress = new Progress<FrameExtractProgress>(p =>
             {
@@ -674,19 +664,19 @@ public partial class MainPage : ContentPage
                 FrameDirEntry.Text = result.OutputDirectory;
                 if (result.Frames.Count == 0)
                 {
-                    SetFrameProgress(0, "Frame extraction failed or no output");
-                    Log("Frame extraction failed, no frames produced");
+                    SetFrameProgress(0, "抽帧失败或无输出");
+                    Log("抽帧失败，未生成任何帧");
                 }
                 else
                 {
-                    SetFrameProgress(1, $"Done, frames {result.Frames.Count}");
-                    Log($"Extraction complete, output {result.OutputDirectory}, frames {result.Frames.Count}");
+                    SetFrameProgress(1, $"完成，帧数 {result.Frames.Count}");
+                    Log($"抽帧完成，输出目录 {result.OutputDirectory}，帧数 {result.Frames.Count}");
                 }
             });
         }
         catch (Exception ex)
         {
-            Log($"Frame extraction exception: {ex.Message}", ex);
+            Log($"抽帧异常: {ex.Message}", ex);
         }
     }
 
@@ -700,9 +690,7 @@ public partial class MainPage : ContentPage
     }
 
     #endregion
-    #region OCR
 
-#endregion
     #region OCR
 
     private async void OnBrowseFrameDirClicked(object sender, EventArgs e)
@@ -723,33 +711,19 @@ public partial class MainPage : ContentPage
 
     private void OnUseLastFramesClicked(object sender, EventArgs e)
     {
-        try
+        if (!string.IsNullOrWhiteSpace(_lastFrameDir) && Directory.Exists(_lastFrameDir))
         {
-            if (!string.IsNullOrWhiteSpace(_lastFrameDir) && Directory.Exists(_lastFrameDir))
-            {
-                FrameDirEntry.Text = _lastFrameDir;
-            }
-            else
-            {
-                Log("没有可用的最近抽帧目录");
-            }
+            FrameDirEntry.Text = _lastFrameDir;
         }
-        catch (Exception ex)
+        else
         {
-            Log($"使用最近抽帧目录失败: {ex.Message}", ex);
+            Log("没有可用的最近抽帧目录");
         }
     }
 
     private void OnOcrConfidenceChanged(object sender, ValueChangedEventArgs e)
     {
-        try
-        {
-            OcrConfidenceValueLabel.Text = e.NewValue.ToString("0.00");
-        }
-        catch (Exception ex)
-        {
-            Log($"更新置信度显示失败: {ex.Message}", ex);
-        }
+        OcrConfidenceValueLabel.Text = e.NewValue.ToString("0.00");
     }
 
     private OcrConfig BuildOcrConfigFromInputs()
@@ -845,26 +819,19 @@ public partial class MainPage : ContentPage
 
     private void OnOcrResultSelected(object sender, SelectionChangedEventArgs e)
     {
-        try
+        if (e.CurrentSelection.FirstOrDefault() is not OcrResult selected)
         {
-            if (e.CurrentSelection.FirstOrDefault() is not OcrResult selected)
-            {
-                return;
-            }
-
-            var frame = _lastFramesForOcr.FirstOrDefault(f => f.VideoId == selected.VideoId && f.FrameIndex == selected.FrameIndex);
-            if (frame != null && File.Exists(frame.ImagePath))
-            {
-                OcrPreviewImage.Source = ImageSource.FromFile(frame.ImagePath);
-            }
-            else
-            {
-                Log("未找到对应的预览帧文件");
-            }
+            return;
         }
-        catch (Exception ex)
+
+        var frame = _lastFramesForOcr.FirstOrDefault(f => f.VideoId == selected.VideoId && f.FrameIndex == selected.FrameIndex);
+        if (frame != null && File.Exists(frame.ImagePath))
         {
-            Log($"选择 OCR 结果失败: {ex.Message}", ex);
+            OcrPreviewImage.Source = ImageSource.FromFile(frame.ImagePath);
+        }
+        else
+        {
+            Log("未找到对应的预览帧文件");
         }
     }
 
@@ -910,6 +877,3 @@ public partial class MainPage : ContentPage
 
     #endregion
 }
-
-
-
