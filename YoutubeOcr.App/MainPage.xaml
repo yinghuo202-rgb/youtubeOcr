@@ -1,33 +1,493 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ui="clr-namespace:YoutubeOcr.App.UI"
              x:Class="YoutubeOcr.App.MainPage"
-             Title="YouTube OCR 工具"
-             Padding="12">
-    <ScrollView>
-        <VerticalStackLayout Spacing="12">
-            <Label Text="最小调试界面：下载 → 抽帧 → OCR" FontAttributes="Bold" FontSize="18" />
+             Title="YouTube OCR"
+             BackgroundColor="{StaticResource AppBackground}">
+    <Grid Padding="{StaticResource OuterPadding}" RowSpacing="0" ColumnSpacing="16">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="240" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-            <VerticalStackLayout Spacing="6">
-                <Label Text="YouTube 链接" />
-                <Entry x:Name="UrlEntry" Placeholder="https://www.youtube.com/watch?v=..." />
-                <Button Text="测试下载" Clicked="OnDownloadClicked" />
+        <!-- Left navigation -->
+        <Border Grid.Column="0"
+                Style="{StaticResource CardStyle}"
+                Padding="18">
+            <VerticalStackLayout Spacing="16">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                    <ui:PixelStarView WidthRequest="26" HeightRequest="26" />
+                    <VerticalStackLayout Spacing="2" Grid.Column="1">
+                        <Label Text="Pixel Tool" Style="{StaticResource BadgeLabelStyle}" />
+                        <Label Text="YouTube OCR Pixel Studio" Style="{StaticResource TitleLabelStyle}" />
+                    </VerticalStackLayout>
+                </Grid>
+
+                <Border Style="{StaticResource MutedCardStyle}">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="流程步骤" Style="{StaticResource CardTitleLabelStyle}" />
+                        <Label Text="Flow: Download -> Frames -> OCR -> Settings" Style="{StaticResource HintLabelStyle}" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <VerticalStackLayout Spacing="8">
+                    <Button x:Name="NavDownloadButton" Text="Step 1 · Download" Style="{StaticResource NavButtonStyle}" Clicked="OnNavButtonClicked" />
+                    <Button x:Name="NavFramesButton" Text="Step 2 · Frames" Style="{StaticResource NavButtonStyle}" Clicked="OnNavButtonClicked" />
+                    <Button x:Name="NavOcrButton" Text="Step 3 · OCR" Style="{StaticResource NavButtonStyle}" Clicked="OnNavButtonClicked" />
+                    <Button x:Name="NavMoreButton" Text="Step 4 · More / Settings" Style="{StaticResource NavButtonStyle}" Clicked="OnNavButtonClicked" />
+                </VerticalStackLayout>
+
+                <Border Style="{StaticResource TagPinkStyle}">
+                    <Label Text="Pixel tip: logic keeps original" Style="{StaticResource BadgeLabelStyle}" />
+                </Border>
             </VerticalStackLayout>
+        </Border>
 
-            <VerticalStackLayout Spacing="6">
-                <Label Text="视频文件路径（用于抽帧）" />
-                <Entry x:Name="VideoPathEntry" Placeholder="C:\videos\sample.mp4" />
-                <Button Text="测试抽帧" Clicked="OnExtractClicked" />
-            </VerticalStackLayout>
+        <!-- Main surface -->
+        <Grid Grid.Column="1" RowSpacing="14">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-            <VerticalStackLayout Spacing="6">
-                <Label Text="帧目录（用于 OCR）" />
-                <Entry x:Name="FrameDirEntry" Placeholder="C:\frames\video1" />
-                <Button Text="测试 OCR" Clicked="OnOcrClicked" />
-            </VerticalStackLayout>
+            <!-- Header -->
+            <Border Grid.Row="0" Style="{StaticResource MutedCardStyle}">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16" VerticalOptions="Center">
+                    <VerticalStackLayout Spacing="6">
+                        <Label x:Name="StepTitleLabel" Text="Step 1 · Download" Style="{StaticResource SectionTitleLabelStyle}" />
+                        <Label x:Name="StepSubtitleLabel" Text="轻盈的像素猫陪你跑完整个流程" Style="{StaticResource HintLabelStyle}" />
+                        <HorizontalStackLayout Spacing="8">
+                            <Border Style="{StaticResource PillBadgeStyle}">
+                                <Label Text="浅色像素" Style="{StaticResource BadgeLabelStyle}" />
+                            </Border>
+                            <Border Style="{StaticResource PillBadgeStyle}">
+                                <Label Text="无渐变" Style="{StaticResource BadgeLabelStyle}" />
+                            </Border>
+                            <Border Style="{StaticResource TagPinkStyle}">
+                                <Label Text="扁平 UI" Style="{StaticResource BadgeLabelStyle}" />
+                            </Border>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                    <ui:PixelDoodleBubble Grid.Column="1"
+                                          WidthRequest="140"
+                                          HeightRequest="96"
+                                          HorizontalOptions="End"
+                                          VerticalOptions="Center" />
+                </Grid>
+            </Border>
 
-            <Label Text="日志" />
-            <Editor x:Name="LogEditor" HeightRequest="280" IsReadOnly="True" />
-        </VerticalStackLayout>
-    </ScrollView>
+            <!-- Content host -->
+            <Grid Grid.Row="1">
+                <Grid>
+                    <!-- Download -->
+                    <Grid x:Name="DownloadContent" RowSpacing="14" ColumnSpacing="14">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource CardStyle}">
+                            <VerticalStackLayout Spacing="10">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                    <ui:PixelStarView WidthRequest="18" HeightRequest="18" />
+                                    <Label Text="单链接添加" Style="{StaticResource CardTitleLabelStyle}" />
+                                </Grid>
+                                <Label Text="输入单个 YouTube 链接，加入队列后再开始下载。" Style="{StaticResource HintLabelStyle}" />
+                                <Border Style="{StaticResource FieldWrapperStyle}">
+                                    <Entry x:Name="UrlEntry" Placeholder="https://www.youtube.com/watch?v=..." />
+                                </Border>
+                                <HorizontalStackLayout Spacing="10">
+                                    <Button Text="添加到队列" Style="{StaticResource PrimaryActionButtonStyle}" Clicked="OnAddUrlClicked" />
+                                    <Button Text="清空输入" Style="{StaticResource SecondaryButtonStyle}" Clicked="OnClearUrlClicked" />
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource CardStyle}">
+                            <VerticalStackLayout Spacing="10">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                    <ui:PixelStarView WidthRequest="18" HeightRequest="18" />
+                                    <Label Text="批量导入" Style="{StaticResource CardTitleLabelStyle}" />
+                                </Grid>
+                                <Label Text="每行一条链接，可一次粘贴多个。" Style="{StaticResource HintLabelStyle}" />
+                                <Border Style="{StaticResource FieldWrapperStyle}">
+                                    <Editor x:Name="BatchUrlsEditor" Placeholder="在此粘贴多条链接..." AutoSize="TextChanges" HeightRequest="110" />
+                                </Border>
+                                <Button Text="导入到队列" Style="{StaticResource PrimaryActionButtonStyle}" Clicked="OnImportUrlsClicked" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource CardStyle}">
+                            <VerticalStackLayout Spacing="10">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" VerticalOptions="Center">
+                                    <ui:PixelStarView WidthRequest="18" HeightRequest="18" />
+                                    <Label Text="下载队列" Style="{StaticResource CardTitleLabelStyle}" />
+                                </Grid>
+                                <CollectionView x:Name="DownloadListView" HeightRequest="180" SelectionMode="None">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Style="{StaticResource FieldWrapperStyle}" Margin="0,4">
+                                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10" VerticalOptions="Center">
+                                                    <VerticalStackLayout Spacing="2">
+                                                        <Label Text="{Binding Url}" LineBreakMode="TailTruncation" />
+                                                        <Label Text="{Binding Status}" Style="{StaticResource HintLabelStyle}" />
+                                                    </VerticalStackLayout>
+                                                    <Button Text="移除" Style="{StaticResource GhostButtonStyle}" Padding="10,6" CommandParameter="{Binding .}" Clicked="OnRemoveUrlClicked" />
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                                <HorizontalStackLayout Spacing="10">
+                                    <Button Text="清空队列" Style="{StaticResource SecondaryButtonStyle}" Clicked="OnClearQueueClicked" />
+                                    <Button Text="填充示例链接" Style="{StaticResource GhostButtonStyle}" Clicked="OnFillSampleClicked" />
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource CardStyle}">
+                            <VerticalStackLayout Spacing="10">
+                                <Label Text="输出目录" Style="{StaticResource CardTitleLabelStyle}" />
+                                <Label Text="点击浏览可选择下载落地路径。" Style="{StaticResource HintLabelStyle}" />
+                                <Border Style="{StaticResource FieldWrapperStyle}">
+                                    <Entry x:Name="DownloadOutputEntry" IsReadOnly="True" />
+                                </Border>
+                                <HorizontalStackLayout Spacing="10">
+                                    <Button Text="浏览..." Style="{StaticResource SecondaryButtonStyle}" Clicked="OnBrowseDownloadFolderClicked" />
+                                    <Switch x:Name="AutoUpdateSwitch" IsToggled="True" VerticalOptions="Center" />
+                                    <Label Text="启用 yt-dlp 更新检查" Style="{StaticResource HintLabelStyle}" VerticalOptions="Center" />
+                                </HorizontalStackLayout>
+                                <ProgressBar x:Name="DownloadProgressBar" Progress="0" HeightRequest="8" />
+                                <Label x:Name="DownloadProgressLabel" Text="等待开始" Style="{StaticResource HintLabelStyle}" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Grid.Row="2" Grid.ColumnSpan="2" Style="{StaticResource CardStyle}">
+                            <VerticalStackLayout Spacing="10">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" VerticalOptions="Center">
+                                    <ui:PixelStarView WidthRequest="18" HeightRequest="18" />
+                                    <Label Text="下载执行" Style="{StaticResource CardTitleLabelStyle}" />
+                                </Grid>
+                                <HorizontalStackLayout Spacing="12">
+                                    <Button Text="开始下载" Style="{StaticResource PrimaryActionButtonStyle}" Clicked="OnDownloadClicked" />
+                                    <Button Text="取消选择" Style="{StaticResource GhostButtonStyle}" Clicked="OnClearSelectionClicked" />
+                                </HorizontalStackLayout>
+                                <Label Text="下载完成的视频会自动出现在抽帧下拉列表中。" Style="{StaticResource HintLabelStyle}" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+
+                    <!-- Frame extraction -->
+                    <Grid x:Name="FrameContent" RowSpacing="14" ColumnSpacing="14" IsVisible="False">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource CardStyle}">
+                            <VerticalStackLayout Spacing="10">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                    <ui:PixelStarView WidthRequest="18" HeightRequest="18" />
+                                    <Label Text="选择视频" Style="{StaticResource CardTitleLabelStyle}" />
+                                </Grid>
+                                <Label Text="选择下载结果或手动指定本地视频路径。" Style="{StaticResource HintLabelStyle}" />
+                                <Picker x:Name="VideoPicker" Title="选择已下载视频" />
+                                <Border Style="{StaticResource FieldWrapperStyle}">
+                                    <Entry x:Name="VideoPathEntry" Placeholder="C:\videos\sample.mp4" />
+                                </Border>
+                                <HorizontalStackLayout Spacing="10">
+                                    <Button Text="刷新下载列表" Style="{StaticResource SecondaryButtonStyle}" Clicked="OnSyncDownloadsClicked" />
+                                    <Button Text="浏览视频..." Style="{StaticResource GhostButtonStyle}" Clicked="OnBrowseVideoClicked" />
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource CardStyle}">
+                            <VerticalStackLayout Spacing="10">
+                                <Label Text="帧输出目录" Style="{StaticResource CardTitleLabelStyle}" />
+                                <Label Text="抽帧输出的根目录，可自定义。" Style="{StaticResource HintLabelStyle}" />
+                                <Border Style="{StaticResource FieldWrapperStyle}">
+                                    <Entry x:Name="FrameOutputEntry" IsReadOnly="True" />
+                                </Border>
+                                <HorizontalStackLayout Spacing="10">
+                                    <Button Text="浏览..." Style="{StaticResource SecondaryButtonStyle}" Clicked="OnBrowseFramesFolderClicked" />
+                                    <Border Style="{StaticResource PillBadgeStyle}">
+                                        <Label Text="支持 JPG / PNG" Style="{StaticResource BadgeLabelStyle}" />
+                                    </Border>
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource CardStyle}">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="抽帧参数" Style="{StaticResource CardTitleLabelStyle}" />
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                    <Label Text="目标 FPS" VerticalOptions="Center" />
+                                    <Entry x:Name="TargetFpsEntry" Text="1.0" Keyboard="Numeric" />
+                                </Grid>
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                    <Label Text="开始时间 hh:mm:ss" VerticalOptions="Center" />
+                                    <Entry x:Name="StartTimeEntry" Placeholder="00:00:00" />
+                                </Grid>
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                    <Label Text="结束时间 hh:mm:ss" VerticalOptions="Center" />
+                                    <Entry x:Name="EndTimeEntry" Placeholder="00:00:10" />
+                                </Grid>
+                                <Grid ColumnDefinitions="Auto,*,Auto,*" ColumnSpacing="8">
+                                    <Label Text="格式" VerticalOptions="Center" />
+                                    <Entry x:Name="OutputFormatEntry" Text="jpg" />
+                                    <Label Text="尺寸" VerticalOptions="Center" />
+                                    <HorizontalStackLayout Spacing="6">
+                                        <Entry x:Name="ResizeWidthEntry" WidthRequest="60" Placeholder="W" Keyboard="Numeric" />
+                                        <Entry x:Name="ResizeHeightEntry" WidthRequest="60" Placeholder="H" Keyboard="Numeric" />
+                                    </HorizontalStackLayout>
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource CardStyle}">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="预览（ROI 暂停交互）" Style="{StaticResource CardTitleLabelStyle}" />
+                                <Label Text="仅显示静态预览帧，ROI 绘制已暂时禁用用于排查崩溃。" Style="{StaticResource HintLabelStyle}" />
+                                <Border Style="{StaticResource FieldWrapperStyle}" HeightRequest="220" BackgroundColor="{StaticResource SoftLilac}">
+                                    <Image x:Name="PreviewImage" Aspect="AspectFit" />
+                                </Border>
+                                <Grid ColumnDefinitions="Auto,*,Auto,*,Auto,*,Auto,*" ColumnSpacing="6">
+                                    <Label Text="X" VerticalOptions="Center" />
+                                    <Entry x:Name="RoiXEntry" WidthRequest="60" Keyboard="Numeric" />
+                                    <Label Text="Y" VerticalOptions="Center" />
+                                    <Entry x:Name="RoiYEntry" WidthRequest="60" Keyboard="Numeric" />
+                                    <Label Text="W" VerticalOptions="Center" />
+                                    <Entry x:Name="RoiWidthEntry" WidthRequest="60" Keyboard="Numeric" />
+                                    <Label Text="H" VerticalOptions="Center" />
+                                    <Entry x:Name="RoiHeightEntry" WidthRequest="60" Keyboard="Numeric" />
+                                </Grid>
+                                <HorizontalStackLayout Spacing="10">
+                                    <Button Text="应用 ROI" Style="{StaticResource SecondaryButtonStyle}" Clicked="OnApplyRoiClicked" />
+                                    <Button Text="抓取预览帧" Style="{StaticResource PrimaryActionButtonStyle}" Clicked="OnPreviewFrameClicked" />
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Grid.Row="2" Grid.ColumnSpan="2" Style="{StaticResource CardStyle}">
+                            <VerticalStackLayout Spacing="10">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" VerticalOptions="Center">
+                                    <ui:PixelStarView WidthRequest="18" HeightRequest="18" />
+                                    <Label Text="抽帧执行" Style="{StaticResource CardTitleLabelStyle}" />
+                                </Grid>
+                                <HorizontalStackLayout Spacing="12">
+                                    <Button Text="开始抽帧" Style="{StaticResource PrimaryActionButtonStyle}" Clicked="OnExtractClicked" />
+                                    <Button Text="使用下载结果" Style="{StaticResource GhostButtonStyle}" Clicked="OnSyncDownloadsClicked" />
+                                </HorizontalStackLayout>
+                                <ProgressBar x:Name="FrameProgressBar" Progress="0" HeightRequest="8" />
+                                <Label x:Name="FrameProgressLabel" Text="等待开始" Style="{StaticResource HintLabelStyle}" />
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+
+                    <!-- OCR -->
+                    <Grid x:Name="OcrContent" RowSpacing="14" ColumnSpacing="14" IsVisible="False">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource CardStyle}">
+                            <VerticalStackLayout Spacing="10">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                    <ui:PixelStarView WidthRequest="18" HeightRequest="18" />
+                                    <Label Text="帧目录" Style="{StaticResource CardTitleLabelStyle}" />
+                                </Grid>
+                                <Label Text="选择抽帧输出的目录，或沿用上一步结果。" Style="{StaticResource HintLabelStyle}" />
+                                <Border Style="{StaticResource FieldWrapperStyle}">
+                                    <Entry x:Name="FrameDirEntry" Placeholder="C:\frames\video1" />
+                                </Border>
+                                <HorizontalStackLayout Spacing="10">
+                                    <Button Text="浏览帧目录..." Style="{StaticResource SecondaryButtonStyle}" Clicked="OnBrowseFrameDirClicked" />
+                                    <Button Text="使用最近抽帧" Style="{StaticResource GhostButtonStyle}" Clicked="OnUseLastFramesClicked" />
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource CardStyle}">
+                            <VerticalStackLayout Spacing="10">
+                                <Label Text="OCR 参数" Style="{StaticResource CardTitleLabelStyle}" />
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                    <Label Text="语言" VerticalOptions="Center" />
+                                    <Picker x:Name="OcrLanguagePicker">
+                                        <Picker.Items>
+                                            <x:String>zh-CN</x:String>
+                                            <x:String>en-US</x:String>
+                                            <x:String>ja-JP</x:String>
+                                            <x:String>ko-KR</x:String>
+                                            <x:String>zh-TW</x:String>
+                                        </Picker.Items>
+                                    </Picker>
+                                </Grid>
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" VerticalOptions="Center">
+                                    <Label Text="置信度阈值" VerticalOptions="Center" />
+                                    <HorizontalStackLayout Spacing="8">
+                                        <Slider x:Name="OcrConfidenceSlider" Minimum="0" Maximum="1" Value="0.5" WidthRequest="180" ValueChanged="OnOcrConfidenceChanged" />
+                                        <Label x:Name="OcrConfidenceValueLabel" Text="0.50" VerticalOptions="Center" />
+                                    </HorizontalStackLayout>
+                                </Grid>
+                                <Grid ColumnDefinitions="Auto,*,Auto,*" ColumnSpacing="8">
+                                    <Label Text="去重" VerticalOptions="Center" />
+                                    <Switch x:Name="DedupSwitch" IsToggled="True" />
+                                    <Label Text="窗口(s)" VerticalOptions="Center" />
+                                    <Entry x:Name="DedupWindowEntry" Text="1.0" Keyboard="Numeric" />
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource CardStyle}">
+                            <VerticalStackLayout Spacing="8">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8" VerticalOptions="Center">
+                                    <ui:PixelStarView WidthRequest="18" HeightRequest="18" />
+                                    <Label Text="OCR 执行" Style="{StaticResource CardTitleLabelStyle}" />
+                                </Grid>
+                                <HorizontalStackLayout Spacing="10">
+                                    <Button Text="开始 OCR" Style="{StaticResource PrimaryActionButtonStyle}" Clicked="OnOcrClicked" />
+                                    <Button Text="刷新目录" Style="{StaticResource GhostButtonStyle}" Clicked="OnUseLastFramesClicked" />
+                                </HorizontalStackLayout>
+                                <ProgressBar x:Name="OcrProgressBar" Progress="0" HeightRequest="8" />
+                                <Label x:Name="OcrProgressLabel" Text="等待开始" Style="{StaticResource HintLabelStyle}" />
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource CardStyle}">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="结果列表" Style="{StaticResource CardTitleLabelStyle}" />
+                                <CollectionView x:Name="OcrResultsView" HeightRequest="220" SelectionMode="Single" SelectionChanged="OnOcrResultSelected">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Style="{StaticResource FieldWrapperStyle}" Margin="0,4">
+                                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                                    <VerticalStackLayout Spacing="2">
+                                                        <Label Text="{Binding VideoId}" FontAttributes="Bold" />
+                                                        <Label Text="{Binding Timestamp}" Style="{StaticResource HintLabelStyle}" />
+                                                        <Label Text="{Binding Text}" LineBreakMode="TailTruncation" />
+                                                    </VerticalStackLayout>
+                                                    <Label Text="{Binding Confidence, StringFormat='{}{0:F2}'}" VerticalOptions="Center" />
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Grid.Row="2" Grid.ColumnSpan="2" Style="{StaticResource CardStyle}">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="帧预览" Style="{StaticResource CardTitleLabelStyle}" />
+                                <Label Text="选择结果行时，显示对应帧。" Style="{StaticResource HintLabelStyle}" />
+                                <Border Style="{StaticResource FieldWrapperStyle}" HeightRequest="200" BackgroundColor="{StaticResource SoftLilac}">
+                                    <Image x:Name="OcrPreviewImage" Aspect="AspectFit" />
+                                </Border>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+
+                    <!-- More / settings -->
+                    <Grid x:Name="MoreContent" RowSpacing="14" ColumnSpacing="14" IsVisible="False">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.ColumnSpan="2" Style="{StaticResource CardStyle}">
+                            <VerticalStackLayout Spacing="10">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                                    <ui:PixelStarView WidthRequest="18" HeightRequest="18" />
+                                    <Label Text="更多 / 设置" Style="{StaticResource CardTitleLabelStyle}" />
+                                </Grid>
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                    <Label Text="应用版本" />
+                                    <Label x:Name="AppVersionLabel" />
+                                </Grid>
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                    <Label Text="配置文件" />
+                                    <Label x:Name="ConfigPathLabel" LineBreakMode="TailTruncation" />
+                                </Grid>
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                    <Label Text="工具目录" />
+                                    <Label x:Name="ToolsPathLabel" LineBreakMode="TailTruncation" />
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Grid.Column="0" Style="{StaticResource CardStyle}">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="下载选项" Style="{StaticResource CardTitleLabelStyle}" />
+                                <HorizontalStackLayout Spacing="10">
+                                    <Switch x:Name="AutoUpdateYtDlpSwitch" IsToggled="True" />
+                                    <Label Text="启动时检查 yt-dlp 更新" Style="{StaticResource HintLabelStyle}" VerticalOptions="Center" />
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout Spacing="10">
+                                    <Switch x:Name="VideoOnlySwitch" IsToggled="True" />
+                                    <Label Text="仅下载视频轨" Style="{StaticResource HintLabelStyle}" VerticalOptions="Center" />
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </Border>
+
+                        <Border Grid.Column="1" Style="{StaticResource CardStyle}">
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="日志与导出" Style="{StaticResource CardTitleLabelStyle}" />
+                                <HorizontalStackLayout Spacing="8">
+                                    <Label Text="日志目录" VerticalOptions="Center" />
+                                    <Label x:Name="LogPathLabel" Style="{StaticResource HintLabelStyle}" LineBreakMode="TailTruncation" />
+                                </HorizontalStackLayout>
+                                <Button Text="打开日志目录" Style="{StaticResource SecondaryButtonStyle}" Clicked="OnOpenLogFolderClicked" />
+                                <Border Style="{StaticResource PillBadgeStyle}">
+                                    <Label Text="导出格式：CSV / TXT (按核心服务输出)" Style="{StaticResource BadgeLabelStyle}" />
+                                </Border>
+                            </VerticalStackLayout>
+                        </Border>
+                    </Grid>
+                </Grid>
+                <ui:PixelCatView HorizontalOptions="End" VerticalOptions="End" Margin="0,0,6,6" />
+            </Grid>
+
+            <!-- Logs -->
+            <Border Grid.Row="2" Style="{StaticResource CardStyle}">
+                <VerticalStackLayout Spacing="10">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" VerticalOptions="Center">
+                        <ui:PixelStarView WidthRequest="18" HeightRequest="18" />
+                        <Label Text="日志" Style="{StaticResource CardTitleLabelStyle}" />
+                    </Grid>
+                    <Border Style="{StaticResource FieldWrapperStyle}" StrokeThickness="1">
+                        <CollectionView x:Name="LogCollectionView"
+                                        ItemsSource="{Binding LogMessages}"
+                                        HeightRequest="200"
+                                        SelectionMode="None">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Label Text="{Binding .}"
+                                           Style="{StaticResource HintLabelStyle}"
+                                           LineBreakMode="TailTruncation" />
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </Border>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
+    </Grid>
 </ContentPage>

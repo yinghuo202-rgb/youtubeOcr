@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView x:Class="YoutubeOcr.App.UI.PixelCatView"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Name="Root"
+             WidthRequest="96"
+             HeightRequest="96"
+             InputTransparent="True">
+    <Grid RowDefinitions="*,*,*,*,*,*,*,*"
+          ColumnDefinitions="*,*,*,*,*,*,*,*"
+          RowSpacing="0"
+          ColumnSpacing="0">
+        <!-- Ears -->
+        <BoxView Grid.Row="0" Grid.Column="1" Color="{StaticResource PrimaryPink}" />
+        <BoxView Grid.Row="0" Grid.Column="2" Color="{StaticResource PrimaryPink}" />
+        <BoxView Grid.Row="0" Grid.Column="5" Color="{StaticResource PrimaryPink}" />
+        <BoxView Grid.Row="0" Grid.Column="6" Color="{StaticResource PrimaryPink}" />
+
+        <BoxView Grid.Row="1" Grid.Column="1" Color="{StaticResource PrimaryPink}" />
+        <BoxView Grid.Row="1" Grid.Column="2" Color="{StaticResource PrimaryPink}" />
+        <BoxView Grid.Row="1" Grid.Column="5" Color="{StaticResource PrimaryPink}" />
+        <BoxView Grid.Row="1" Grid.Column="6" Color="{StaticResource PrimaryPink}" />
+
+        <!-- Head outline + fill -->
+        <BoxView Grid.Row="2" Grid.Column="0" Color="{StaticResource PrimaryBlue}" />
+        <BoxView Grid.Row="2" Grid.Column="1" Color="{StaticResource PrimaryPink}" />
+        <BoxView Grid.Row="2" Grid.Column="2" Color="{StaticResource PrimaryPink}" />
+        <BoxView Grid.Row="2" Grid.Column="3" Color="{StaticResource PrimaryPink}" />
+        <BoxView Grid.Row="2" Grid.Column="4" Color="{StaticResource PrimaryPink}" />
+        <BoxView Grid.Row="2" Grid.Column="5" Color="{StaticResource PrimaryPink}" />
+        <BoxView Grid.Row="2" Grid.Column="6" Color="{StaticResource PrimaryPink}" />
+        <BoxView Grid.Row="2" Grid.Column="7" Color="{StaticResource PrimaryBlue}" />
+
+        <BoxView Grid.Row="3" Grid.Column="0" Color="{StaticResource PrimaryBlue}" />
+        <BoxView Grid.Row="3" Grid.Column="1" Color="{StaticResource PrimaryPink}" />
+        <BoxView Grid.Row="3" Grid.Column="2" Color="{StaticResource PrimaryBlue}" />
+        <BoxView Grid.Row="3" Grid.Column="3" Color="{StaticResource PrimaryPink}" />
+        <BoxView Grid.Row="3" Grid.Column="4" Color="{StaticResource PrimaryPink}" />
+        <BoxView Grid.Row="3" Grid.Column="5" Color="{StaticResource PrimaryBlue}" />
+        <BoxView Grid.Row="3" Grid.Column="6" Color="{StaticResource PrimaryPink}" />
+        <BoxView Grid.Row="3" Grid.Column="7" Color="{StaticResource PrimaryBlue}" />
+
+        <BoxView Grid.Row="4" Grid.Column="0" Color="{StaticResource PrimaryBlue}" />
+        <BoxView Grid.Row="4" Grid.Column="1" Color="{StaticResource AccentMint}" />
+        <BoxView Grid.Row="4" Grid.Column="2" Color="{StaticResource CardBackground}" />
+        <BoxView Grid.Row="4" Grid.Column="3" Color="{StaticResource PrimaryBlue}" />
+        <BoxView Grid.Row="4" Grid.Column="4" Color="{StaticResource PrimaryBlue}" />
+        <BoxView Grid.Row="4" Grid.Column="5" Color="{StaticResource CardBackground}" />
+        <BoxView Grid.Row="4" Grid.Column="6" Color="{StaticResource AccentMint}" />
+        <BoxView Grid.Row="4" Grid.Column="7" Color="{StaticResource PrimaryBlue}" />
+
+        <BoxView Grid.Row="5" Grid.Column="0" Color="{StaticResource PrimaryBlue}" />
+        <BoxView Grid.Row="5" Grid.Column="1" Color="{StaticResource PrimaryPink}" />
+        <BoxView Grid.Row="5" Grid.Column="2" Color="{StaticResource PrimaryPink}" />
+        <BoxView Grid.Row="5" Grid.Column="3" Color="{StaticResource PrimaryPink}" />
+        <BoxView Grid.Row="5" Grid.Column="4" Color="{StaticResource PrimaryPink}" />
+        <BoxView Grid.Row="5" Grid.Column="5" Color="{StaticResource PrimaryPink}" />
+        <BoxView Grid.Row="5" Grid.Column="6" Color="{StaticResource PrimaryPink}" />
+        <BoxView Grid.Row="5" Grid.Column="7" Color="{StaticResource PrimaryBlue}" />
+
+        <BoxView Grid.Row="6" Grid.Column="1" Color="{StaticResource PrimaryBlue}" />
+        <BoxView Grid.Row="6" Grid.Column="2" Color="{StaticResource PrimaryPink}" />
+        <BoxView Grid.Row="6" Grid.Column="3" Color="{StaticResource PrimaryPink}" />
+        <BoxView Grid.Row="6" Grid.Column="4" Color="{StaticResource PrimaryPink}" />
+        <BoxView Grid.Row="6" Grid.Column="5" Color="{StaticResource PrimaryPink}" />
+        <BoxView Grid.Row="6" Grid.Column="6" Color="{StaticResource PrimaryBlue}" />
+
+        <BoxView Grid.Row="7" Grid.Column="2" Color="{StaticResource PrimaryBlue}" />
+        <BoxView Grid.Row="7" Grid.Column="3" Color="{StaticResource PrimaryPink}" />
+        <BoxView Grid.Row="7" Grid.Column="4" Color="{StaticResource PrimaryPink}" />
+        <BoxView Grid.Row="7" Grid.Column="5" Color="{StaticResource PrimaryBlue}" />
+    </Grid>
+</ContentView>

@@ -1,4 +1,4 @@
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Text;
 using System.Text.RegularExpressions;
 using YoutubeOcr.Core.Config;
@@ -43,7 +43,7 @@ public class YouTubeDownloader : IYouTubeDownloader
         if (config.CheckForUpdates)
         {
             _ = _processRunner.RunAsync(ytDlpPath, "-U", outputProgress: progress != null
-                ? new Progress<string>(msg => progress.Report(new DownloadProgress(string.Empty, "更新", null, msg, null)))
+                ? new Progress<string>(msg => progress.Report(new DownloadProgress(string.Empty, "鏇存柊", null, msg, null)))
                 : null, cancellationToken: cancellationToken);
         }
 
@@ -86,7 +86,7 @@ public class YouTubeDownloader : IYouTubeDownloader
 
             if (!result.IsSuccess)
             {
-                progress?.Report(new DownloadProgress(url, "失败", null, result.StandardError, null));
+                progress?.Report(new DownloadProgress(url, "澶辫触", null, result.StandardError, null));
                 continue;
             }
 
@@ -98,7 +98,7 @@ public class YouTubeDownloader : IYouTubeDownloader
                 Title = downloadedFile is null ? videoId : Path.GetFileNameWithoutExtension(downloadedFile)
             };
             results.Add(info);
-            progress?.Report(new DownloadProgress(url, "成功", 100, null, downloadedFile));
+            progress?.Report(new DownloadProgress(url, "鎴愬姛", 100, null, downloadedFile));
         }
 
         return results.ToList();

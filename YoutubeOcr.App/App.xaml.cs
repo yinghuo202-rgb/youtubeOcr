@@ -1,6 +1,7 @@
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Maui.Storage;
 using System.Runtime.ExceptionServices;
 using YoutubeOcr.Core.Services;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace YoutubeOcr.App;
 
@@ -21,13 +22,25 @@ public partial class App : Application
 	{
 		try
 		{
+			AppDomain.CurrentDomain.UnhandledException += (_, e) =>
+			{
+				var ex = e.ExceptionObject as Exception ?? new Exception("Unknown unhandled exception object");
+				WriteUnhandledLog("AppDomain", ex);
+			};
+
+			TaskScheduler.UnobservedTaskException += (_, e) =>
+			{
+				WriteUnhandledLog("TaskScheduler", e.Exception);
+				e.SetObserved();
+			};
+
 #if WINDOWS
 			var winApp = global::Microsoft.UI.Xaml.Application.Current;
 			if (winApp != null)
 			{
 				winApp.UnhandledException += (_, e) =>
 				{
-					FileLogger.LogError(e.Exception, "XAML UnhandledException");
+					WriteUnhandledLog("WinUI", e.Exception);
 					// prevent WinUI failfast
 					e.Handled = true;
 				};
@@ -43,6 +56,23 @@ public partial class App : Application
 		catch
 		{
 			// avoid crashing while wiring diagnostics
+		}
+	}
+
+	private static void WriteUnhandledLog(string source, Exception? ex)
+	{
+		try
+		{
+			var logDir = Path.Combine(FileSystem.AppDataDirectory, "Logs");
+			Directory.CreateDirectory(logDir);
+			var logPath = Path.Combine(logDir, "unhandled.log");
+			var content = $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}] [{source}] {ex}";
+			File.AppendAllText(logPath, content + Environment.NewLine);
+			FileLogger.LogError(ex, $"Unhandled: {source}");
+		}
+		catch
+		{
+			// last-resort logging should never crash the app
 		}
 	}
 
