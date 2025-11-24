@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Pastel anime-pixel palette -->
+    <Color x:Key="AppBackground">#F3F6FF</Color>
+    <Color x:Key="CardBackground">#FFFFFF</Color>
+    <Color x:Key="Primary">#5A8BFF</Color>
+    <Color x:Key="PrimaryButton">#FFD47A</Color>
+    <Color x:Key="PrimaryPink">#FF9ACF</Color>
+    <Color x:Key="AccentMint">#9CF1D1</Color>
+    <Color x:Key="TextMain">#222222</Color>
+    <Color x:Key="TextSecondary">#444444</Color>
+    <Color x:Key="TextMuted">#888888</Color>
+    <Color x:Key="LineSoft">#E0E4F0</Color>
+    <Color x:Key="InputBackground">#EEF2FF</Color>
+    <Color x:Key="BadgeLilac">#E6E9FF</Color>
+    <Color x:Key="White">White</Color>
+    <Color x:Key="Black">Black</Color>
+    <Color x:Key="OffBlack">#1F1F1F</Color>
+    <Color x:Key="MidnightBlue">#1E2746</Color>
+    <Color x:Key="Magenta">#D600AA</Color>
+    <Color x:Key="PrimaryDarkText">#1E1E1E</Color>
+    <Color x:Key="SecondaryDarkText">#444444</Color>
+
+    <SolidColorBrush x:Key="AppBackgroundBrush" Color="{StaticResource AppBackground}" />
+    <SolidColorBrush x:Key="CardBackgroundBrush" Color="{StaticResource CardBackground}" />
+    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}" />
+    <SolidColorBrush x:Key="PrimaryPinkBrush" Color="{StaticResource PrimaryPink}" />
+    <SolidColorBrush x:Key="PrimaryButtonBrush" Color="{StaticResource PrimaryButton}" />
+    <SolidColorBrush x:Key="AccentMintBrush" Color="{StaticResource AccentMint}" />
+    <SolidColorBrush x:Key="TextMainBrush" Color="{StaticResource TextMain}" />
+    <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource TextSecondary}" />
+    <SolidColorBrush x:Key="TextMutedBrush" Color="{StaticResource TextMuted}" />
+    <SolidColorBrush x:Key="LineSoftBrush" Color="{StaticResource LineSoft}" />
+    <SolidColorBrush x:Key="InputBackgroundBrush" Color="{StaticResource InputBackground}" />
+    <SolidColorBrush x:Key="BadgeLilacBrush" Color="{StaticResource BadgeLilac}" />
+    <Color x:Key="GlassStroke">#E0E4F0</Color>
+    <SolidColorBrush x:Key="GlassStrokeBrush" Color="{StaticResource GlassStroke}" />
+
+    <!-- Legacy gray keys retained for style compatibility -->
+    <Color x:Key="Gray100">#E9EDF5</Color>
+    <Color x:Key="Gray200">#D9DEEB</Color>
+    <Color x:Key="Gray300">#C7CEE2</Color>
+    <Color x:Key="Gray400">#AAB7D3</Color>
+    <Color x:Key="Gray500">#8C9AC1</Color>
+    <Color x:Key="Gray600">#6E7EA7</Color>
+    <Color x:Key="Gray900">#222222</Color>
+    <Color x:Key="Gray950">#1A1A1A</Color>
+    <SolidColorBrush x:Key="Gray100Brush" Color="{StaticResource Gray100}"/>
+    <SolidColorBrush x:Key="Gray200Brush" Color="{StaticResource Gray200}"/>
+    <SolidColorBrush x:Key="Gray300Brush" Color="{StaticResource Gray300}"/>
+    <SolidColorBrush x:Key="Gray400Brush" Color="{StaticResource Gray400}"/>
+    <SolidColorBrush x:Key="Gray500Brush" Color="{StaticResource Gray500}"/>
+    <SolidColorBrush x:Key="Gray600Brush" Color="{StaticResource Gray600}"/>
+    <SolidColorBrush x:Key="Gray900Brush" Color="{StaticResource Gray900}"/>
+    <SolidColorBrush x:Key="Gray950Brush" Color="{StaticResource Gray950}"/>
+
+    <!-- Keep legacy resource keys but flatten gradients to single tones -->
+    <LinearGradientBrush x:Key="PrimaryGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#5A8BFF" Offset="0" />
+        <GradientStop Color="#5A8BFF" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="SecondaryGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#FF9ACF" Offset="0" />
+        <GradientStop Color="#FF9ACF" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="WarmGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#FFD47A" Offset="0" />
+        <GradientStop Color="#FFD47A" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="NavSelectedBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#B9C7FF" Offset="0" />
+        <GradientStop Color="#B9C7FF" Offset="1" />
+    </LinearGradientBrush>
+
+    <RadialGradientBrush x:Key="BackgroundGlowBrush" Center="0.5,0.3" Radius="1.4">
+        <GradientStop Color="#11FFFFFF" Offset="0" />
+        <GradientStop Color="#00FFFFFF" Offset="1" />
+    </RadialGradientBrush>
+</ResourceDictionary>

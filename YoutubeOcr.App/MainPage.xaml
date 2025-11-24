@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="YoutubeOcr.App.MainPage"
+             Title="YouTube OCR 工具"
+             Padding="12">
+    <ScrollView>
+        <VerticalStackLayout Spacing="12">
+            <Label Text="最小调试界面：下载 → 抽帧 → OCR" FontAttributes="Bold" FontSize="18" />
+
+            <VerticalStackLayout Spacing="6">
+                <Label Text="YouTube 链接" />
+                <Entry x:Name="UrlEntry" Placeholder="https://www.youtube.com/watch?v=..." />
+                <Button Text="测试下载" Clicked="OnDownloadClicked" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="6">
+                <Label Text="视频文件路径（用于抽帧）" />
+                <Entry x:Name="VideoPathEntry" Placeholder="C:\videos\sample.mp4" />
+                <Button Text="测试抽帧" Clicked="OnExtractClicked" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Spacing="6">
+                <Label Text="帧目录（用于 OCR）" />
+                <Entry x:Name="FrameDirEntry" Placeholder="C:\frames\video1" />
+                <Button Text="测试 OCR" Clicked="OnOcrClicked" />
+            </VerticalStackLayout>
+
+            <Label Text="日志" />
+            <Editor x:Name="LogEditor" HeightRequest="280" IsReadOnly="True" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="YoutubeOcr.App/YoutubeOcr.App.csproj" />
+  <Project Path="YoutubeOcr.Core/YoutubeOcr.Core.csproj" />
+</Solution>

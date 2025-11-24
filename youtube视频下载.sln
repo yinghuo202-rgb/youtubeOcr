@@ -1,0 +1,30 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YoutubeOcr.App", "YoutubeOcr.App\YoutubeOcr.App.csproj", "{5928336A-AD3F-4E5C-D86A-A9AA378F518F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YoutubeOcr.Core", "YoutubeOcr.Core\YoutubeOcr.Core.csproj", "{393BF78D-508C-D3DE-6B09-E05126257F51}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5928336A-AD3F-4E5C-D86A-A9AA378F518F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5928336A-AD3F-4E5C-D86A-A9AA378F518F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5928336A-AD3F-4E5C-D86A-A9AA378F518F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5928336A-AD3F-4E5C-D86A-A9AA378F518F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{393BF78D-508C-D3DE-6B09-E05126257F51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{393BF78D-508C-D3DE-6B09-E05126257F51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{393BF78D-508C-D3DE-6B09-E05126257F51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{393BF78D-508C-D3DE-6B09-E05126257F51}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {989662C8-2C1A-423A-8D6E-815993DAAD7C}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,39 @@
+# build 输出
+bin/
+obj/
+.platforms/
+.vs/
+**/bin/
+**/obj/
+
+# VS Code
+.vscode/
+
+# 本地 dotnet SDK（.dotnet 太大，不要入库）
+.dotnet/
+
+# 外部工具（推荐：Tools 不入库，改为文档说明手动下载）
+Tools/
+
+# 抽帧和 OCR 生成的文件
+Frames/
+**/Frames/
+*.jpg
+*.png
+*.bmp
+
+# 视频/音频资源
+*.mp4
+*.mkv
+*.webm
+*.avi
+*.mov
+*.mp3
+*.wav
+
+# 日志
+*.log
+
+# 临时
+*.tmp
+*.temp
